@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Исламская Рассрочка - Калькулятор</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+      // !!! ЗАМЕНИТЕ YANDEX_COUNTER_ID НА ID ВАШЕГО СЧЕТЧИКА !!!
+      const ymCounterId = "YANDEX_COUNTER_ID"; 
+      ym(ymCounterId, "init", {
+          clickmap:true,
+          trackLinks:true,
+          accurateTrackBounce:true
+      });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/YANDEX_COUNTER_ID" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <style>
+        :root {
+            --primary-color: #10B981; /* Emerald Green */
+            --primary-hover-color: #059669;
+            --background-color: #F9FAFB;
+            --card-background-color: #FFFFFF;
+            --text-color: #1F2937;
+            --text-light-color: #6B7280;
+            --border-color: #E5E7EB;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-light-color);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-hover-color);
+        }
+
+        /* Calculator & Results Section */
+        .card {
+            background-color: var(--card-background-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .calculate-btn, .apply-btn, .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .calculate-btn:hover, .apply-btn:hover, .submit-btn:hover {
+            background-color: var(--primary-hover-color);
+        }
+        
+        .apply-btn {
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+        }
+
+        /* Results Table */
+        #results-section {
+            transition: opacity 0.5s ease;
+        }
+        
+        .table-wrapper {
+             overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            min-width: 600px;
+        }
+
+        .results-table th, .results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .results-table th {
+            font-weight: 700;
+            color: var(--text-light-color);
+        }
+        
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .disclaimer {
+            font-size: 0.875rem;
+            color: var(--text-light-color);
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: var(--card-background-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-light-color);
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+            color: var(--text-light-color);
+        }
+        
+        /* Utility */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container, .hero {
+                padding: 1rem;
+            }
+            .hero {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="hero">
+            <h1>Калькулятор исламской рассрочки</h1>
+            <p>Сравните условия от разных банков и выберите лучшее предложение для себя. Просто, быстро и без скрытых комиссий.</p>
+            <a href="#calculator-section" class="cta-button">Начать расчет</a>
+        </header>
+
+        <main>
+            <section id="calculator-section" class="card">
+                <h2>Калькулятор рассрочки</h2>
+                <form id="calculator-form" aria-label="Форма калькулятора рассрочки">
+                    <div class="form-group">
+                        <label for="product-price">Стоимость товара (₽)</label>
+                        <input type="number" id="product-price" name="product-price" placeholder="Например, 500000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="down-payment">Первоначальный взнос (₽)</label>
+                        <input type="number" id="down-payment" name="down-payment" placeholder="Например, 100000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="term">Срок (месяцев)</label>
+                        <select id="term" name="term" required>
+                            <option value="2">2 месяца</option>
+                            <option value="3">3 месяца</option>
+                            <option value="4">4 месяца</option>
+                            <option value="5">5 месяцев</option>
+                            <option value="6">6 месяцев</option>
+                            <option value="7">7 месяцев</option>
+                            <option value="8">8 месяцев</option>
+                            <option value="9">9 месяцев</option>
+                            <option value="10">10 месяцев</option>
+                            <option value="11">11 месяцев</option>
+                            <option value="12" selected>12 месяцев</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="calculate-btn">Рассчитать</button>
+                </form>
+            </section>
+
+            <section id="results-section" class="card hidden">
+                <h2>Сравнение предложений</h2>
+                <div class="table-wrapper">
+                    <table class="results-table" aria-live="polite">
+                        <thead>
+                            <tr>
+                                <th scope="col">Банк</th>
+                                <th scope="col">Наценка (₽)</th>
+                                <th scope="col">Итого (₽)</th>
+                                <th scope="col">В месяц (₽)</th>
+                                <th scope="col">Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Results will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <p class="disclaimer">Результаты являются приблизительными и служат для сравнения. Окончательные условия предоставляются каждым банком индивидуально.</p>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2024 Your Company | Свяжитесь с нами: info@example.com</p>
+        </footer>
+    </div>
+    
+    <!-- Application Modal -->
+    <div id="application-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close" aria-label="Закрыть модальное окно">&times;</button>
+            <h2>Заявка на рассрочку</h2>
+            
+            <!-- 
+                ИНСТРУКЦИЯ ПО НАСТРОЙКЕ GOOGLE FORMS ДЛЯ ПРИЕМА ЗАЯВОК:
+
+                Шаг 1: Создайте Google Форму
+                1. Откройте forms.google.com и создайте новую форму.
+                2. Добавьте 4 поля типа "Текст (строка)":
+                   - Имя
+                   - Телефон
+                   - Электронная почта
+                   - Выбранный банк (это поле заполнится автоматически)
+                3. Перейдите на вкладку "Ответы" -> "Ссылка на таблицы" и создайте новую Google Таблицу. Все заявки будут попадать туда.
+
+                Шаг 2: Получите URL для отправки данных
+                1. В редакторе формы нажмите на три точки (еще) -> "Создать образец для заполнения".
+                2. Заполните все поля любыми данными и нажмите "Получить ссылку".
+                3. Скопируйте сгенерированную ссылку. Она будет выглядеть примерно так: 
+                   https://docs.google.com/forms/d/e/1FAIpQL.../viewform?usp=pp_url&entry.123...=Test&entry.456...=Test...
+                4. Из этой ссылки нам нужна только часть до "/viewform". Замените "/viewform" на "/formResponse".
+                   Пример: https://docs.google.com/forms/d/e/1FAIpQLSc.../formResponse
+                5. Вставьте получившийся URL в атрибут `action` у тега <form> ниже.
+
+                Шаг 3: Получите ID полей (entry.XXXXXX)
+                1. В ссылке, которую вы скопировали на Шаге 2, найдите параметры `entry.`. Например, `entry.123456789`.
+                2. Каждому полю в вашей форме соответствует свой уникальный `entry.ID`.
+                3. Сопоставьте ID с полями и вставьте их в атрибут `name` для каждого `<input>` в форме ниже.
+            -->
+            
+            <form id="google-form" action="https://docs.google.com/forms/d/e/1FAIpQLSetrQI4QWortTrSFRevYywlZjYJlw6Qolmfqrkt_hcZuz_6DQ/formResponse
+" method="POST" target="hidden_iframe">
+                <div id="form-inputs">
+                    <!-- ЗАМЕНИТЕ entry.XXXXXX на ID ваших полей из Google Формы -->
+                    <input type="hidden" id="bank-name-input" name="entry.1726191390" value="">
+                
+                    <div class="form-group">
+                        <label for="modal-name">Имя</label>
+                        <input type="text" id="modal-name" name="entry.403278400" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-phone">Телефон</label>
+                        <input type="tel" id="modal-phone" name="entry.306095172" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-email">Электронная почта</label>
+                        <input type="email" id="modal-email" name="entry.1166816010" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Отправить заявку</button>
+                </div>
+            </form>
+            <div id="form-success-message" class="hidden" style="text-align: center;">
+                <h3>Спасибо!</h3>
+                <p>Ваша заявка успешно отправлена. Мы скоро с вами свяжемся.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Скрытый iframe для отправки формы без перезагрузки страницы -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('calculator-form');
+            const resultsSection = document.getElementById('results-section');
+            const resultsBody = document.getElementById('results-body');
+            
+            const modal = document.getElementById('application-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const bankNameInput = document.getElementById('bank-name-input');
+
+            const googleForm = document.getElementById('google-form');
+            const formInputs = document.getElementById('form-inputs');
+            const formSuccessMessage = document.getElementById('form-success-message');
+            const hiddenIframe = document.getElementById('hidden_iframe');
+            let formSubmitted = false;
+
+
+            const banks = [
+                { name: 'Al-Baraka', margin: 44000 },
+                { name: 'LaRiba', margin: 48000 },
+                { name: 'Tasnim', margin: 60000 },
+                { name: 'ФинЛайт', margin: 50000 }
+            ];
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const productPrice = parseFloat(document.getElementById('product-price').value);
+                const downPayment = parseFloat(document.getElementById('down-payment').value);
+                const term = parseInt(document.getElementById('term').value, 10);
+
+                if (isNaN(productPrice) || productPrice <= 0) {
+                    alert('Пожалуйста, введите корректную стоимость товара.');
+                    return;
+                }
+                if (isNaN(downPayment) || downPayment < 0) {
+                    alert('Пожалуйста, введите корректный первоначальный взнос.');
+                    return;
+                }
+                if (downPayment >= productPrice) {
+                    alert('Первоначальный взнос не может быть больше или равен стоимости товара.');
+                    return;
+                }
+
+                const loanAmount = productPrice - downPayment;
+                const results = banks.map(bank => {
+                    const totalCost = loanAmount + bank.margin;
+                    const monthlyPayment = totalCost / term;
+                    return {
+                        ...bank,
+                        totalCost,
+                        monthlyPayment
+                    };
+                });
+                
+                displayResults(results, downPayment);
+                
+                if (typeof ym === 'function') {
+                    ym(ymCounterId, 'reachGoal', 'calc_submit');
+                    console.log(`Yandex.Metrica event 'calc_submit' triggered for counter ${ymCounterId}.`);
+                } else {
+                    console.warn('Yandex.Metrica (ym) is not defined.');
+                }
+            });
+            
+            function displayResults(results, downPayment) {
+                resultsBody.innerHTML = '';
+                
+                const formatCurrency = (value) => Math.round(value).toLocaleString('ru-RU');
+
+                results.forEach(result => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${result.name}</td>
+                        <td>${formatCurrency(result.margin)}</td>
+                        <td>${formatCurrency(result.totalCost + downPayment)}</td>
+                        <td>${formatCurrency(result.monthlyPayment)}</td>
+                        <td><button class="apply-btn" data-bank-name="${result.name}">Подать заявку</button></td>
+                    `;
+                    resultsBody.appendChild(row);
+                });
+                
+                resultsSection.classList.remove('hidden');
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Event delegation for apply buttons
+            resultsBody.addEventListener('click', (event) => {
+                if (event.target.classList.contains('apply-btn')) {
+                    const bankName = event.target.getAttribute('data-bank-name');
+                    openModal(bankName);
+                }
+            });
+            
+            // --- Google Form Submission Logic ---
+            googleForm.addEventListener('submit', () => {
+                formSubmitted = true;
+                // Небольшая задержка перед скрытием, чтобы отправка успела инициироваться
+                setTimeout(() => {
+                    if (hiddenIframe.contentWindow) { // Проверка на случай если iframe не загрузился
+                        formInputs.classList.add('hidden');
+                        formSuccessMessage.classList.remove('hidden');
+                    }
+                }, 100);
+            });
+            
+            function resetModalForm() {
+                formInputs.classList.remove('hidden');
+                formSuccessMessage.classList.add('hidden');
+                googleForm.reset();
+                formSubmitted = false;
+            }
+
+            function openModal(bankName) {
+                resetModalForm();
+                bankNameInput.value = bankName;
+                modal.classList.add('active');
+                
+                if (typeof ym === 'function') {
+                    ym(ymCounterId, 'reachGoal', 'apply_click', { bank: bankName });
+                    console.log(`Yandex.Metrica event 'apply_click' for ${bankName} triggered.`);
+                } else {
+                    console.warn('Yandex.Metrica (ym) is not defined.');
+                }
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+            }
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
